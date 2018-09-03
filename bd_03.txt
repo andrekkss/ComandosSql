@@ -1,0 +1,95 @@
+Declare
+Salario_minimo Constant Real:= 985.00;
+BEGIN
+Commit;
+end;
+/
+
+declare 
+Nome_pessoa varchar(20);
+BEGIN
+commit;
+end;
+/
+
+Desc employees
+
+
+Declare
+maior_sal Real;
+Begin
+Select Max(salary) into maior_sal from employees;
+end;
+/
+
+create table Folha(
+   cod_folha number,
+   NM_pessoa_folha varchar(20) not null,
+   VL_salario number not null
+);
+
+insert into Folha values (1,'bigode', 1000);
+insert into Folha values (2,'Peter', 5000);
+insert into Folha values (3,'Kevin', 6000);
+
+Select*from Folha;
+
+Declare
+vSalario Real;
+Begin
+Select Max(VL_Salario) into vSalario from Folha
+where VL_salario Between 1000 and 6000;
+if vSalario Between 5000 and 6000 then
+update folha set VL_salario = VL_salario * 1.25;
+end if;
+commit;
+end;
+/
+
+create table Numeros(
+   numero number(4)
+);
+
+insert into Numeros values(1);
+
+desc Numeros
+
+declare
+vNum Integer;
+begin
+vNum:=0;
+loop
+vNum:=vNum+1;
+insert into Numeros values(vNum);
+if vNum>10 then
+exit;
+end if;
+commit;
+end loop;
+end;
+/
+
+declare
+  vNum integer;
+BEGIN
+ for vNum in 11..20 loop
+   insert into Numeros values(vNum);
+ end loop;
+commit;
+end;
+/
+
+declare   
+  vNum integer;
+BEGIN
+  vNum:=21;
+  while vNum<=30 loop
+    insert into Numeros values(vNum);
+    vNum:= vNum + 1;
+  end loop;
+commit;
+end;
+/
+
+truncate table Numeros
+select * from Numeros;
