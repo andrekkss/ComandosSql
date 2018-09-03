@@ -1,0 +1,114 @@
+create table tb_clientePF(
+  codigo number,
+  nome varchar(50)not null,
+  saldo number(8,2)null,
+  estado varchar(2) null,
+  primary key(codigo)
+);
+
+create table tb_gerente(
+codfunc number (4)not null,
+codClientePF number(4) not null,
+nome varchar (50)not null,
+salario number(8,2)not null,
+estado varchar(2) null,
+data_cadastro date null,
+primary key(codfunc),
+foreign key (codClientePF) references tb_clientePF(codigo))
+
+
+create sequence incrementClientePF
+start with 1
+increment by 1
+minvalue 1
+maxvalue 1000000;
+
+insert into tb_clientePF values(incrementClientePF.nextval,'andre', 2500, 'SP');
+insert into tb_clientePF values(incrementClientePF.nextval,'fernando', 2500, 'SP');
+insert into tb_clientePF values(incrementClientePF.nextval,'gabriel', 2500, 'RJ');
+insert into tb_clientePF values(incrementClientePF.nextval,'erika', 2500, 'SP');
+insert into tb_clientePF values(incrementClientePF.nextval,'sales', 2500, 'MI');
+insert into tb_clientePF values(incrementClientePF.nextval,'venderson', 2500, 'SP');
+
+------------------------------------------------------------------------------------------------------------------
+
+relacionado a tabela
+
+------------------------------------------------------------------------------------------------------------------
+
+alter table tb_clientePF add telefone char(11)
+
+alter table tb_clientePF modify telefone char(12)
+
+truncate table tb_clientePF
+
+drop table tb_clientePF
+
+delete from tb_clientePF where codigo = 1
+
+update tb_clientePF set saldo = saldo*1.2
+
+desc tb_clientePF 
+
+------------------------------------------------------------------------------------------------------------------
+
+Select em gerais
+
+------------------------------------------------------------------------------------------------------------------
+select*from tb_clientePF; 
+
+select*from tb_clientePF order by codigo
+
+select*from tb_clientePF where nome like 'a%';
+
+select*from tb_clientePF where nome like '%a';
+
+select*from tb_clientePF where nome = 'andre';
+
+select * from tb_clientePF where nome = 'andre' or nome = 'erika'
+
+select nome, saldo from tb_clientePF;
+
+select nome, saldo from tb_clientePF where saldo = '2500';
+
+select avg(saldo) as media, sum(saldo) as soma , min(saldo) as minimo, max(saldo) as maximo from tb_clientePF;
+
+select nome, (saldo*10%) AS aumento from tb_clientePF;
+
+select nome, (saldo*12) AS anual from tb_clientePF;
+
+select nome from tb_clientePF where nome <> 'andre' and nome <> 'erika'
+
+------------------------------------------------------------------------------------------------------------------
+select * from tb_clientePF where saldo >= '2500' and saldo <= '3000';
+
+select * from tb_clientePF where saldo between '2500' and '3000';
+
+select * from tb_clientePF where saldo = '2500' or saldo = '3000'   
+
+select * from tb_clientePF where saldo in ('2500', '3000');
+
+------------------------------------------------------------------------------------------------------------------
+
+Velocidade em codigos
+
+------------------------------------------------------------------------------------------------------------------
+
+create index name on tb_clientePF(nome);
+
+select *from tb_clientePF where nome='andre';
+
+select *from user_indexes;
+
+drop index name;
+
+------------------------------------------------------------------------------------------------------------------
+
+view tabela
+
+------------------------------------------------------------------------------------------------------------------
+
+create view cliente_saldo as
+select nome, saldo from tb_clientePF;
+
+select * from cliente_saldo;
