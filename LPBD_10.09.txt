@@ -1,0 +1,123 @@
+create table erros_ocorridos(
+erro varchar(50)
+);
+
+
+Declare
+vMin real;
+Begin
+Select Salary into vMin from employees where Salary >= 21000;
+Exception
+when no_data_found then 
+insert into erros_ocorridos values('Select não retornou linhas');
+when too_many_rows then
+insert into erros_ocorridos values('Select retornou varias linhas');
+when others then
+insert into erros_ocorridos values('outros erros');
+commit;
+end;
+/
+
+Select min(Salary), avg(Salary), max(Salary) from employees;
+
+select * from erros_ocorridos;  
+
+create table departamento(
+cd_dept number(4) NOT NULL,
+nm_dept varchar(50) NOT NULL,
+primary key(cd_dept));
+
+create table funcionario(
+cd_func number(4) NOT NULL,
+cd_dept number(4) NOT NULL,
+nm_func varchar(50) NOT NULL,
+vl_salario number(8,2) NULL,
+sg_estado varchar(2) NULL,
+dt_cadastro date NULL,
+primary key (cd_func),
+foreign key (cd_dept) references departamento(cd_dept));
+
+insert into departamento values(1,'Dept 1');
+insert into departamento values(2,'Dept 2');
+insert into departamento values(3,'Dept 3');
+
+insert into funcionario values(1,1,'deruma',590.00,'SP',TO_DATE('10/09/2018', 'dd/mm/yyyy'));
+insert into funcionario values(2,3,'Bigode',590.00,'SP',TO_DATE('10/09/2018', 'dd/mm/yyyy'));
+insert into funcionario values(3,2,'Caique',590.00,'SP',TO_DATE('10/09/2018', 'dd/mm/yyyy'));
+
+drop table funcionario
+truncate table funcionario
+
+select*from funcionario
+
+create or replace trigger permite
+before delete or insert or update
+on funcionario
+begin
+if to_char(sysdate,'dd') between 01 and 12 then
+raise_application_error (-20000,'Folha de Pagamento Fechada entre os dias 05 e 10');
+end if;
+end;
+/
+
+insert into funcionario values(11,1,'Bolivia',590.00,'SP',TO_DATE('17/05/2018', 'dd/mm/yyyy'));
+
+
+create or replace Procedure Atualizar_salario is
+Begin
+UPDATE Funcionario
+set vl_Salario = vl_Salario*1.3;
+commit;
+end;
+/
+
+Begin
+atualizar_salario;
+end;
+
+select * from funcionario
+
+create or replace Procedure Atualizar_salario (ePorcentual Real)is
+Begin
+UPDATE Funcionario
+set vl_Salario = vl_Salario*(1+ePorcentual/100);
+commit;
+end;
+/
+
+begin
+atualizar_Salario(10);
+end;
+
+select * from 
+
+
+create or replace function dif_minutos(data1 date, data2 date) return number is
+hora number(8):=0;
+minuto number(8):=0;
+minha number(8):=0;
+Begin
+hora := trunc((data2-data1)*24);
+minuto := trunc(((data2-data1)*24 - trunc((data2-data1)*24))):
+minha := (hora*60)+minuto;
+return minha;
+end;
+/
+
+create table minutos(
+data_inicial date,
+data_final date,
+diferença number);
+
+create of replace procedure Datas(data1 date,dataf date) is
+begin
+insert into minutos(data inicial,data_final,diferenca)
+values()data1,dataf,dif_minutos(data1,dataf));
+commit;
+end:
+/
+
+begin
+datas(to_date('09/09/2018'),to_date('10/09/2018'));
+end;
+/
