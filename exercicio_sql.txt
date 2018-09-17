@@ -1,65 +1,88 @@
-1
-create table cadastro(
+create table pagamentos(
+codigo number,
+sb number(8,2),
+fgts number(8,2),
+inss number(8,2),
+irpf number(8,2),
+sl number(8,2),
+primary key(codigo));
 
-nome varchar2(30) not null,
-sobrenome varchar2(30) not null,
-salario number (10,2) not null,
-endereco varchar2(30) not null,
-dt_cadastro date not null,
-primary key (nome));
+create or replace function fgts(x number)
+return number is 
+begin
+return(x*0.08);
+end;
+/
 
-insert into cadastro values ('Marcelo', 'Diniz', 1000, 'Piracema 100', sysdate);
-insert into cadastro values ('Fernando', 'Romero', 2000, 'Correia 100', sysdate);
-insert into cadastro values ('Carlos', 'Martins', 2500, 'Siria 100', sysdate);
-insert into cadastro values ('Miguel', 'Carmim', 4000, 'Piaiu 100', sysdate);
-insert into cadastro values ('Camila', 'Pacheco', 8000,'Sao Jorge 84', sysdate);
-insert into cadastro values ('Marina', 'Augusto', 1400, 'Nova Tatuape 100', sysdate);
-insert into cadastro values ('Roberto', 'Eduardo', 800, 'Jurubatuba 505', sysdate);
-insert into cadastro values ('Eduardo', 'Gomes', 1000, 'Estrela 14', sysdate);
-insert into cadastro values ('Mario', 'Temer', 3500, 'Moreira 10', sysdate);
-insert into cadastro values ('Marcelo', 'Juracy', 7350, 'Santa Elvira 100', sysdate);
+create or replace function inss(x real)
+return number is 
+begin if x<=840.55 then
+return (x*0.765);
+else
+if x<= 1050.00 then
+return(x*0.0865);
+else
+if x<= 1400.91 then
+return (x*0.09);
+else
+if x<= 2801.82 then
+ return (x*0.11);
+else
+return (308.20);
+end if;
+end if;
+end if;
+end if;
+end;
+/
 
-2
-desc cadastro
+select*from pagamentos;
 
-3
-select * from cadastro
+create or replace function irpf(x real)
+return number is 
+begin
+if x<=1257.12 then
+return ((x*0.00)-0.00);
+else if x <= 2512.08 then
+return ((x*0.15)-188.57);
+else
+return ((x*0.275)-502.58);
+end if;
+end if;
+end;
+/
 
-4
-select nome, sobrenome from cadastro
+create or replace function sl(x real)
+return number is
+begin
+return (x-((inss(x))+(irpf(x-inss(x)))));
+end;
+/
 
-5
-select * from cadastro where nome = 'Marina' or nome = 'Eduardo'
+declare
+vnum integer;
+begin
+for vnum in 1..5 loop
+insert into pagamentos(codigo,sb)values(vnum, 1000*vnum);
+end loop;
+commit;
+end;
+/
 
-6
-select (salario*12) as Anual from Cadastro
+select * from pagamentos;
 
-7
-select nome, sobrenome, (salario*1.10) as Aumento from Cadastro
+create or replace procedure processa_folha is
+begin
+update pagamentos set fgts = fgts(sb);
+update pagamentos set inss = inss(sb);
+update pagamentos set irpf = irpf(sb-(inss(sb)));
+update pagamentos set sl = sl(sb);
+commit;
+end;
+/
 
-8
-select * from cadastro where salario >='800' or salario <='8000'
+begin 
+processa_folha;
+end;
 
-9
-select * from cadastro where salario >='4000' and salario <='5000'
-
-10
-select * from cadastro where salario >='4000'
-
-11
-select * from cadastro where nome like '%a%'
-
-12
-select * from cadastro where nome like 'M%'
-
-13
-select * from cadastro where nome = 'Marcelo'
-
-14
-select funionarios from cadastro where nome like '%a%'
-
-15
-select nome, sobrenome from cadastro where nome <> 'Carlos' and nome <> 'Fernando'
-
-16 
-select * from cadastro where salario <> '1000'
+select * from pagamentos;
