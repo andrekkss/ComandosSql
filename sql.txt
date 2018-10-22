@@ -112,3 +112,105 @@ create view cliente_saldo as
 select nome, saldo from tb_clientePF;
 
 select * from cliente_saldo;
+
+
+------------------------------------------------------
+
+create table cliente(
+codigo number,
+nome varchar(50),
+primary key(codigo));
+
+create table vendas(
+codigo number (4),
+data date,
+cliente number (4),
+valor number (4),
+primary key(codigo));
+
+add CONSTRAINT foreign key (cliente) REFERENCES cliente(codigo)
+
+ALTER TABLE vendas
+ADD CONSTRAINT cliente FOREIGN KEY (cliente)
+REFERENCES cliente(codigo);
+
+ALTER TABLE itens_vendas
+ADD CONSTRAINT produto FOREIGN KEY (produto)
+REFERENCES produto(codigo);
+
+ALTER TABLE itens_vendas
+ADD CONSTRAINT venda FOREIGN KEY (venda)
+REFERENCES vendas(codigo);
+
+
+ALTER TABLE vendas DROP CONSTRAINT cliente;
+
+ALTER TABLE vendas ADD CONSTRAINT cliente FOREIGN KEY (cliente )
+REFERENCES cliente(codigo) ON DELETE CASCADE ;
+
+ALTER TABLE itens_vendas DROP CONSTRAINT produto;
+
+ALTER TABLE itens_vendas ADD CONSTRAINT produto FOREIGN KEY (produto)
+REFERENCES produto(codigo) ON DELETE CASCADE ;
+
+
+ALTER TABLE itens_vendas DROP CONSTRAINT venda;
+
+
+ALTER TABLE itens_vendas ADD CONSTRAINT venda FOREIGN KEY (venda)
+REFERENCES vendas(codigo) ON UPDATE CASCADE ;
+
+
+
+CONSTRAINT foreign key (venda) references vendas(codigo),
+CONSTRAINT foreign key (produto) references produto(codigo));
+
+drop table cliente;
+drop table vendas;
+drop table itens_vendas;
+drop table produto
+
+ALTER TABLE vendas DROP cliente;
+Table USUARIO_PERFIL alterado.
+ALTER TABLE vendas
+ADD CONSTRAINT codigo FOREIGN KEY (codigo)
+REFERENCES cliente(codigo) ON DELETE CASCADE ;
+Table USUARIO_PERFIL alterado.
+
+
+
+
+create table itens_vendas(
+coditem number (4),
+venda number (4),
+produto number (4),
+quatidade number (4),
+valor_unitario number (8),
+nome varchar(50),
+primary key(coditem));
+
+
+
+
+create table produto(
+codigo number (4),
+descricao varchar(50),
+primary key(codigo));
+
+select*from itens_vendas;
+
+drop table itens vendas;
+
+insert into cliente values (1, 'André');
+insert into cliente values (2, 'Delmar');
+
+insert into produto values (1, 'Sabao');
+insert into produto values (2, 'gel');
+
+insert into vendas values (1, '18-06-12' , 1, 5);
+insert into vendas values (2, '18-06-12' , 1, 5);
+
+insert into itens_vendas values(1, 1, 1, 2, 5.0, 'nome');
+insert into itens_vendas values(2, 2, 2, 2, 10.0, 'nome');
+
+update cliente set codigo = 17 where codigo = 1;
