@@ -1,0 +1,87 @@
+create table cliente (
+ codigo number(4),
+ nome varchar(30),
+ primary key (codigo)
+)
+
+create table venda (
+ codigo number(4),
+ codigo_cli number(4),
+ valor number(8,2),
+ dia date,
+ primary key (codigo))
+ 
+create table produto (
+ codigo number(4),
+  descricao varchar(30),
+  vlVenda number(8,2),
+  primary key(codigo))
+  
+create table item_venda (
+codigo number(4),
+codigo_ven number(4),
+codigo_pro number(4),
+qantidade number(4),
+vlUnitario number(8,2),
+primary key (codigo))
+
+create or replace trigger cascade_update
+after update of codigo on cliente
+for each row
+begin
+update venda set codigo_cli=:new.codigo
+where codigo_cli=:old.codigo;
+end;
+
+
+
+alter table venda
+add constraint codigo_cli foreign key
+(codigo_cli) references cliente(codigo) on delete cascade;
+
+alter table item_venda
+add constraint codigo_ven foreign key(codigo_ven) references venda (codigo) on delete cascade;
+
+alter table item_venda
+add constraint codigo_pro foreign key(codigo_pro) references produto (codigo)on delete cascade;
+
+//foreign key (codigo_cli) references cliente(codigo) ON DELETE CASCADE 
+//foreign key(codigo_ven) references venda (codigo) ON DELETE CASCADE ,
+//foreign key(codigo_pro) references produto (codigo) ON DELETE CASCADE 
+
+
+drop table item venda
+drop table venda
+
+insert into cliente values (1, 'André');
+insert into cliente values (2, 'Delmar');
+
+insert into produto values (1, 'Sabao', 15);
+insert into produto values (2, 'gel', 15);
+
+insert into venda values (1, 1, 5, '18-06-12' );
+insert into venda values (2, 2, 5, '18-06-12' );
+
+insert into item_venda values(1, 1, 1, 2, 5.0);
+insert into item_venda values(2, 2, 2, 2, 10.0);
+
+update cliente set codigo = 17 where codigo = 1;
+
+select * from venda
+select * from item_venda
+desc venda
+
+delete from cliente where codigo = 17
+
+
+
+
+
+
+
+
+
+
+
+
+
